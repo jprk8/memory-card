@@ -83,6 +83,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   font-family: Roboto;
+  font-size: 18px;
 }
 
 img, picture, video, canvas, svg {
