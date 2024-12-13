@@ -1,0 +1,17 @@
+.header {
+    width: 100%;
+}
+
+.logo {
+    padding: 10px;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    border-bottom: 5px solid black;
+}
+
+.instruction {
+    background-color: white;
+    text-align: center;
+    margin: 10px;
+}
