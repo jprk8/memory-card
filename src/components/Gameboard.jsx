@@ -6,14 +6,10 @@ async function fetchPokemon(id) {
     try {
         const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
         const response = await fetch(url, { mode: 'cors' });
-        if (!response.ok) {
-            throw new Error(response.status);
-        }
+        if (!response.ok) throw new Error(response.status);
         const data = await response.json();
         const name = data.name[0].toUpperCase() + data.name.slice(1);
         const imgUrl = data.sprites.front_default;
-        console.log(name);
-        console.log(imgUrl);
         return { id, name, imgUrl };
     } catch (error) {
         console.log(error);
@@ -21,8 +17,10 @@ async function fetchPokemon(id) {
     }
 }
 
-export default function Gameboard() {
+export default function Gameboard({ increaseScore }) {
     const [pokemonArray, setPokemonArray] = useState([]);
+    const [gameOver, setGameOver] = useState(false);
+    const [selections, setSelections] = useState([]);
 
     useEffect(() => {
         async function loadPokemons() {
@@ -32,12 +30,42 @@ export default function Gameboard() {
             setPokemonArray(result);
         }
         loadPokemons();
-    }, []);
+    }, [gameOver]);
+
+    function handleClick(id) {
+        if (selections.includes(id)) {
+            console.log('already chosen');
+        } else {
+            console.log('new pokemon');
+            setSelections([...selections, id]);
+            increaseScore();
+            shuffleCards(pokemonArray);
+        }
+    }
+
+    // Fisher-Yates algorithm to shuffle array
+    function shuffleCards(prevArray) {
+        const newArray = [...prevArray];
+        for (let i = newArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = newArray[i];
+            newArray[i] = newArray[j];
+            newArray[j] = temp;
+        }
+        setPokemonArray(newArray);
+    }
+
+    console.log(selections);
 
     return (
         <div className='gameboard'>
             {pokemonArray.map((pokemon) => (
-                <Card key={pokemon.id} name={pokemon.name} imgUrl={pokemon.imgUrl} />
+                <Card
+                    key={pokemon.id}
+                    name={pokemon.name}
+                    imgUrl={pokemon.imgUrl}
+                    onClick={() => handleClick(pokemon.id)}
+                />
             ))}
         </div>
     )

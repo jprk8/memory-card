@@ -2,10 +2,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid grey;
+    border: 6px double black;
     padding: 12px;
-    border-radius: 12px;
     box-shadow: 2px 2px 5px darkgrey;
     font-weight: 600;
     margin: 10px;
+    width: 240px;
 }

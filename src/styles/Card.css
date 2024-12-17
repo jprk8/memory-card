@@ -2,13 +2,25 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
     background-color: white;
     border: 1px solid black;
     border-top: 20px solid red;
     cursor: pointer;
+    padding: 0;
+    box-shadow: 2px 2px 5px #bbb;
 }
 
 .card:hover {
-    background-color: lightcyan;
+    background-color: lightgoldenrodyellow;
+    transform: scale(1.1);
+}
+
+.card img {
+    padding: 20px;
+}
+
+.card-name {
+    border-top: 2px solid black;
+    width: 100%;
+    padding: 5px;
 }

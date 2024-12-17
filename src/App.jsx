@@ -1,19 +1,22 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import Header from './components/Header'
 import Scoreboard from './components/Scoreboard'
 import Gameboard from './components/Gameboard'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [bestScore, setBestScore] = useState(0);
+  const [currentScore, setCurrentScore] = useState(0);
+
+  function increaseScore() {
+    setCurrentScore(currentScore + 1);
+  }
 
   return (
     <>
       <Header />
-      <Scoreboard />
-      <Gameboard />
+      <Scoreboard bestScore={bestScore} currentScore={currentScore} />
+      <Gameboard increaseScore={increaseScore} />
     </>
   )
 }
