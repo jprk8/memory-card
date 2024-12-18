@@ -8,6 +8,7 @@
     cursor: pointer;
     padding: 0;
     box-shadow: 2px 2px 5px #bbb;
+
 }
 
 .card:hover {
@@ -23,4 +24,20 @@
     border-top: 2px solid black;
     width: 100%;
     padding: 5px;
+}
+
+.card.animate {
+    animation: drop-in 300ms;
+}
+
+@keyframes drop-in {
+    0% {
+      transform: translateY(-10%);
+      opacity: 0.3;
+    }
+  
+    100% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
 }

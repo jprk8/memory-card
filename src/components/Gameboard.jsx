@@ -13,14 +13,15 @@ async function fetchPokemon(id) {
         return { id, name, imgUrl };
     } catch (error) {
         console.log(error);
-        return { id, name: 'Unknown', imgUrl: '' }; //fallback values
+        return { id, name: 'Unknown', imgUrl: '' };
     }
 }
 
-export default function Gameboard({ increaseScore }) {
+export default function Gameboard({ increaseScore, updateScores }) {
     const [pokemonArray, setPokemonArray] = useState([]);
     const [gameOver, setGameOver] = useState(false);
     const [selections, setSelections] = useState([]);
+    const [animateCards, setAnimateCards] = useState(false);
 
     useEffect(() => {
         async function loadPokemons() {
@@ -29,12 +30,21 @@ export default function Gameboard({ increaseScore }) {
             const result = await Promise.all(promises);
             setPokemonArray(result);
         }
+
         loadPokemons();
+        setAnimateCards(true);
+        setTimeout(() => setAnimateCards(false), 300);
+        if (gameOver) {
+            setSelections([]);
+            setGameOver(false);
+        }
     }, [gameOver]);
 
     function handleClick(id) {
         if (selections.includes(id)) {
-            console.log('already chosen');
+            console.log('Game Over');
+            updateScores();
+            setGameOver(true); // game over
         } else {
             console.log('new pokemon');
             setSelections([...selections, id]);
@@ -53,9 +63,12 @@ export default function Gameboard({ increaseScore }) {
             newArray[j] = temp;
         }
         setPokemonArray(newArray);
+        setAnimateCards(true);
+        setTimeout(() => setAnimateCards(false), 500);
     }
 
     console.log(selections);
+    console.log(`Game Over: ${gameOver}`);
 
     return (
         <div className='gameboard'>
@@ -65,6 +78,7 @@ export default function Gameboard({ increaseScore }) {
                     name={pokemon.name}
                     imgUrl={pokemon.imgUrl}
                     onClick={() => handleClick(pokemon.id)}
+                    animate={animateCards}
                 />
             ))}
         </div>
