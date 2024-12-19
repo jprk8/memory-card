@@ -117,7 +117,6 @@ export default function Gameboard({ increaseScore, resetScore, showScores, curre
                     {showScores()}
                     <div className='dialog-btns'>
                         <button onClick={handleRestart}>Restart</button>
-                        <button onClick={() => modalRef.current.close()}>Close</button>
                     </div>
                 </dialog>
 
