@@ -1,6 +1,51 @@
 .gameboard {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
+    place-items: center;
     gap: 40px;
     margin-top: 40px;
+}
+
+.game-over-dialog {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    padding: 60px 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    display: none;
+}
+
+.game-over-dialog[open] {
+    display: flex;
+}
+
+.game-over-dialog::backdrop {
+    background-color: black;
+    opacity: 0.6;
+}
+
+.dialog-btns {
+    display: flex;
+    gap: 30px;
+}
+
+.dialog-btns button,
+.restart-btn {
+    background-color: white;
+    padding: 5px 20px;
+    cursor: pointer;
+}
+
+.dialog-btns button:hover,
+.restart-btn:hover {
+    background-color: black;
+    color: white;
+}
+
+.restart-btn {
+    margin-top: 50px;
 }

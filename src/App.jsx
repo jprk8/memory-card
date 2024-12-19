@@ -19,11 +19,14 @@ function App() {
     });
   }
 
-  function updateScores() {
-    if (currentScore > bestScore) {
-      setBestScore(currentScore);
-    }
+  function resetScore() {
     setCurrentScore(0);
+  }
+
+  function showScores() {
+    return (
+      <Scoreboard bestScore={bestScore} currentScore={currentScore} />
+    )
   }
 
   function startGame() {
@@ -37,15 +40,22 @@ function App() {
         <button className='start' onClick={startGame}>Start Game</button>
       </>
     )
-  } else {
-    return (
+  }
+  
+  return (
       <>
         <Header />
-        <Scoreboard bestScore={bestScore} currentScore={currentScore} />
-        <Gameboard increaseScore={increaseScore} updateScores={updateScores}/>
+        <Scoreboard
+          bestScore={bestScore}
+          currentScore={currentScore}
+        />
+        <Gameboard
+          increaseScore={increaseScore}
+          resetScore={resetScore}
+          showScores={showScores}
+        />
       </>
     )
   }
-}
 
 export default App
