@@ -53,6 +53,7 @@ function App() {
           increaseScore={increaseScore}
           resetScore={resetScore}
           showScores={showScores}
+          currentScore={currentScore}
         />
       </>
     )

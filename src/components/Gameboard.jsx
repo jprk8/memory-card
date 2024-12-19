@@ -1,6 +1,5 @@
 import '../styles/Gameboard.css'
 import Card from './Card'
-import Scoreboard from './Scoreboard'
 import { useState, useEffect, useRef } from 'react'
 
 async function fetchPokemon(id) {
@@ -18,39 +17,57 @@ async function fetchPokemon(id) {
     }
 }
 
-export default function Gameboard({ increaseScore, resetScore, showScores }) {
+export default function Gameboard({ increaseScore, resetScore, showScores, currentScore }) {
     const [pokemonArray, setPokemonArray] = useState([]);
-    const [gameOver, setGameOver] = useState(false);
     const [gameStart, setGameStart] = useState(true);
+    const [gameOver, setGameOver] = useState(false);
     const [selections, setSelections] = useState([]);
     const [animateCards, setAnimateCards] = useState(false);
-    const modalRef = useRef(null); // reference to dialog element
+    const modalRef = useRef(null);
+    const nextLevelRef = useRef(null);
+    const winRef = useRef(null);
 
-    async function loadPokemons() {
-        const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const [levelIndex, setLevelIndex] = useState(0);
+    const levelOne = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const levelTwo = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+    const levelThree = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36];
+    const levels = [levelOne, levelTwo, levelThree];
+
+    async function loadPokemons(level) {
+        const ids = [...level];
         const promises = ids.map((id) => fetchPokemon(id));
         const result = await Promise.all(promises);
         setPokemonArray(result);
     }
 
-    // set gameStart to false after start so it doesn't recall initGAme
+    useEffect(() => {
+        if (gameStart) {
+            loadPokemons(levels[levelIndex]);
+            setAnimateCards(true);
+            setTimeout(() => setAnimateCards(false), 300);
+            setGameStart(false);
+        }
+    }, [gameStart]);
 
-    // without using useEffect
-    if (gameStart) {
-        loadPokemons();
-        setAnimateCards(true);
-        setTimeout(() => setAnimateCards(false), 300);
-        setGameStart(false);
-    }
+    useEffect(() => {
+        if (gameOver && modalRef.current) {
+            modalRef.current.showModal();
+        }
+    }, [gameOver]);
 
-    if (gameOver && modalRef.current) {
-        modalRef.current.showModal();
-    }
+    useEffect(() => {
+        if (currentScore === 36) {
+            winRef.current.showModal();
+        } else if (currentScore != 0 && currentScore % 12 === 0) {
+            nextLevelRef.current.showModal();
+        }
+    }, [currentScore]);
+
 
     function handleClick(id) {
         if (gameOver || selections.includes(id)) {
             console.log('Game Over');
-            setGameOver(true); // game over
+            setGameOver(true);
         } else {
             console.log('new pokemon');
             setSelections([...selections, id]);
@@ -78,13 +95,22 @@ export default function Gameboard({ increaseScore, resetScore, showScores }) {
         resetScore();
         setSelections([]);
         setGameStart(true);
+        setLevelIndex(0);
         if (modalRef.current) modalRef.current.close();
+        if (winRef.current) winRef.current.close();
+    }
+
+    function handleNextLevel() {
+        setGameStart(true);
+        setLevelIndex(levelIndex + 1);
+        if (nextLevelRef.current) nextLevelRef.current.close();
     }
 
     console.log(selections);
 
     return (
         <>
+            <div className='level'>Level {levelIndex + 1}</div>
             <div className='gameboard'>
                 <dialog ref={modalRef} className='game-over-dialog'>
                     <h2>Game Over!</h2>
@@ -92,6 +118,20 @@ export default function Gameboard({ increaseScore, resetScore, showScores }) {
                     <div className='dialog-btns'>
                         <button onClick={handleRestart}>Restart</button>
                         <button onClick={() => modalRef.current.close()}>Close</button>
+                    </div>
+                </dialog>
+
+                <dialog ref={nextLevelRef} className='next-level-dialog'>
+                    <h2>Level {levelIndex + 1} Complete!</h2>
+                    <div className='dialog-btns'>
+                        <button onClick={handleNextLevel}>Next Level</button>
+                    </div>
+                </dialog>
+
+                <dialog ref={winRef} className='win-dialog'>
+                    <h2>Congratulations! You Win!</h2>
+                    <div className='dialog-btns'>
+                    <button onClick={handleRestart}>Restart</button>
                     </div>
                 </dialog>
 

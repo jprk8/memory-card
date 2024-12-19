@@ -6,7 +6,9 @@
     margin-top: 40px;
 }
 
-.game-over-dialog {
+.game-over-dialog,
+.next-level-dialog,
+.win-dialog {
     position: fixed;
     top: 30%;
     left: 50%;
@@ -19,11 +21,13 @@
     display: none;
 }
 
-.game-over-dialog[open] {
+.game-over-dialog[open],
+.next-level-dialog[open],
+.win-dialog[open] {
     display: flex;
 }
 
-.game-over-dialog::backdrop {
+::backdrop {
     background-color: black;
     opacity: 0.6;
 }
@@ -48,4 +52,13 @@
 
 .restart-btn {
     margin-top: 50px;
+}
+
+.level {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: 500;
+    border: 3px solid black;
+    padding: 0 20px;
+    box-shadow: 2px 2px 5px #bbb;
 }
