@@ -62,3 +62,9 @@
     padding: 0 20px;
     box-shadow: 2px 2px 5px #bbb;
 }
+
+.loading {
+    grid-column: 1 / 7;
+    font-size: 36px;
+    margin-top: 80px;
+}

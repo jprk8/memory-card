@@ -19,6 +19,7 @@ async function fetchPokemon(id) {
 
 export default function Gameboard({ increaseScore, resetScore, showScores, currentScore }) {
     const [pokemonArray, setPokemonArray] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [gameStart, setGameStart] = useState(true);
     const [gameOver, setGameOver] = useState(false);
     const [selections, setSelections] = useState([]);
@@ -34,10 +35,12 @@ export default function Gameboard({ increaseScore, resetScore, showScores, curre
     const levels = [levelOne, levelTwo, levelThree];
 
     async function loadPokemons(level) {
+        setLoading(true);
         const ids = [...level];
         const promises = ids.map((id) => fetchPokemon(id));
         const result = await Promise.all(promises);
         setPokemonArray(result);
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -112,29 +115,8 @@ export default function Gameboard({ increaseScore, resetScore, showScores, curre
         <>
             <div className='level'>Level {levelIndex + 1}</div>
             <div className='gameboard'>
-                <dialog ref={modalRef} className='game-over-dialog'>
-                    <h2>Game Over!</h2>
-                    {showScores()}
-                    <div className='dialog-btns'>
-                        <button onClick={handleRestart}>Restart</button>
-                    </div>
-                </dialog>
-
-                <dialog ref={nextLevelRef} className='next-level-dialog'>
-                    <h2>Level {levelIndex + 1} Complete!</h2>
-                    <div className='dialog-btns'>
-                        <button onClick={handleNextLevel}>Next Level</button>
-                    </div>
-                </dialog>
-
-                <dialog ref={winRef} className='win-dialog'>
-                    <h2>Congratulations! You Win!</h2>
-                    <div className='dialog-btns'>
-                    <button onClick={handleRestart}>Restart</button>
-                    </div>
-                </dialog>
-
-                {pokemonArray.map((pokemon) => (
+                {loading && <div className='loading'>Loading...</div>}
+                {!loading && pokemonArray.map((pokemon) => (
                     <Card
                         key={pokemon.id}
                         name={pokemon.name}
@@ -145,6 +127,28 @@ export default function Gameboard({ increaseScore, resetScore, showScores, curre
                 ))}
             </div>
             {gameOver && <button className='restart-btn' onClick={handleRestart}>Reset</button>}
+
+            <dialog ref={modalRef} className='game-over-dialog'>
+                    <h2>Game Over!</h2>
+                    {showScores()}
+                    <div className='dialog-btns'>
+                        <button onClick={handleRestart}>Restart</button>
+                    </div>
+            </dialog>
+
+            <dialog ref={nextLevelRef} className='next-level-dialog'>
+                <h2>Level {levelIndex + 1} Complete!</h2>
+                <div className='dialog-btns'>
+                    <button onClick={handleNextLevel}>Next Level</button>
+                </div>
+            </dialog>
+
+            <dialog ref={winRef} className='win-dialog'>
+                <h2>Congratulations! You Win!</h2>
+                <div className='dialog-btns'>
+                <button onClick={handleRestart}>Restart</button>
+                </div>
+            </dialog>
         </>
     )
 }
